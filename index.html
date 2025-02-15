@@ -109,7 +109,7 @@
         </div>
         
         <div class="submit-button">
-            <button name="submit" onclick="submitForm()">Submit</button>
+            <button type="button" name="submit" onclick="submitForm()">Submit</button>      
         </div>
         </form>
     </div>
@@ -155,7 +155,11 @@
                 alert('Error: ' + data.error);
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+    console.error('Error:', error);
+    alert('Submission failed. Check console for details.');
+});
+        
     });
 }
     </script>
