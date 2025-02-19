@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,42 +61,6 @@
                 </select>
             </div>
 
-            <u><h3>Academic Details</h3></u>
-
-            <div class="form-group">
-                <label for="marks10">10th Marks (%):</label>
-                <input type="number" id="marks10" name="10th Marks" required min="0" max="100">
-            </div>
-
-            <div class="form-group">
-                <label for="marks12">12th Marks (%):</label>
-                <input type="number" id="marks12" name="12th Marks" required min="0" max="100">
-            </div>
-
-            <div class="form-group">
-                <label for="jee-score">JEE Main Score:</label>
-                <input type="number" id="jee-score" name="JEE Main Score" min="0">
-            </div>
-
-            <div class="form-group">
-                <label for="cuet-score">CUET (UG) Score:</label>
-                <input type="number" id="cuet-score" name="CUET Score" min="0">
-            </div>
-
-            <u><h3>Additional Details</h3></u>
-
-            <div class="form-group">
-                <label for="category">Category:</label>
-                <select id="category" name="Category" required>
-                    <option value="">Select Category</option>
-                    <option value="general">General</option>
-                    <option value="sc">SC</option>
-                    <option value="st">ST</option>
-                    <option value="obc">OBC</option>
-                    <option value="ews">EWS</option>
-                </select>
-            </div>
-
             <div class="form-group">
                 <label>Payment Receipt:</label>
                 <input type="file" name="PaymentReceipt" accept="image/*,application/pdf" required>
@@ -108,6 +71,7 @@
 
             <div class="submit-button">
                 <button id="submitButton" type="button" onclick="submitForm()">Submit</button>
+                <p id="statusMessage" style="display: none; font-weight: bold;"></p>
             </div>
         </form>
     </div>
@@ -132,8 +96,12 @@
 
             const form = document.getElementById('studentForm');
             const submitButton = document.getElementById('submitButton');
+            const statusMessage = document.getElementById('statusMessage');
+
             submitButton.disabled = true;
             submitButton.textContent = "Submitting...";
+            statusMessage.style.display = "block";
+            statusMessage.textContent = "Submitting your form, please wait...";
 
             const formData = new FormData(form);
             const fileFields = ['PaymentReceipt', 'StudentPhoto'];
@@ -168,15 +136,19 @@
                 .then(data => {
                     if (data.result === 'success') {
                         submitButton.textContent = "Form Submitted Successfully!";
+                        statusMessage.textContent = "Form submitted successfully!";
+                        statusMessage.style.color = "green";
                         setTimeout(() => {
                             submitButton.textContent = "Submit";
                             submitButton.disabled = false;
+                            statusMessage.style.display = "none";
                             form.reset();
                         }, 3000);
                     } else {
                         alert('Error: ' + data.error);
                         submitButton.textContent = "Submit";
                         submitButton.disabled = false;
+                        statusMessage.style.display = "none";
                     }
                 })
                 .catch(error => {
@@ -184,6 +156,7 @@
                     alert('Submission failed. Please try again.');
                     submitButton.textContent = "Submit";
                     submitButton.disabled = false;
+                    statusMessage.style.display = "none";
                 });
             });
         }
