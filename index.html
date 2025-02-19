@@ -1,3 +1,6 @@
+https://script.google.com/macros/s/AKfycbz98OMzTVYs9_dsxj6F3Z2yf-SMM3iVr55DuCxH8Y1IV1wiXgnQiHAvD2Rf6_bBw_3JIw/exec
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +39,7 @@
 
             <div class="form-group">
                 <label>Phone Number:</label>
-                <input type="tel" name="Phone Number" required>
+                <input type="tel" name="Phone Number" required pattern="[0-9]{10}" title="Enter a 10-digit phone number">
             </div>
 
             <div class="form-group">
@@ -62,40 +65,30 @@
             <u><h3>Academic Details</h3></u>
 
             <div class="form-group">
-                <label for="board10">10th Board Name:</label>
-                <input type="text" id="board10" name="10th Board Name" required>
-            </div>
-
-            <div class="form-group">
                 <label for="marks10">10th Marks (%):</label>
-                <input type="number" id="marks10" name="10th Marks" required>
-            </div>
-
-            <div class="form-group">
-                <label for="board12">12th Board Name:</label>
-                <input type="text" id="board12" name="12th Board Name" required>
+                <input type="number" id="marks10" name="10th Marks" required min="0" max="100">
             </div>
 
             <div class="form-group">
                 <label for="marks12">12th Marks (%):</label>
-                <input type="number" id="marks12" name="12th Marks" required>
+                <input type="number" id="marks12" name="12th Marks" required min="0" max="100">
             </div>
 
             <div class="form-group">
                 <label for="jee-score">JEE Main Score:</label>
-                <input type="number" id="jee-score" name="JEE Main Score">
+                <input type="number" id="jee-score" name="JEE Main Score" min="0">
             </div>
 
             <div class="form-group">
                 <label for="cuet-score">CUET (UG) Score:</label>
-                <input type="number" id="cuet-score" name="CUET Score">
+                <input type="number" id="cuet-score" name="CUET Score" min="0">
             </div>
 
             <u><h3>Additional Details</h3></u>
 
             <div class="form-group">
                 <label for="category">Category:</label>
-                <select id="category" name="Category">
+                <select id="category" name="Category" required>
                     <option value="">Select Category</option>
                     <option value="general">General</option>
                     <option value="sc">SC</option>
@@ -120,28 +113,43 @@
     </div>
 
     <script>
+        function validateForm() {
+            const form = document.getElementById('studentForm');
+            const inputs = form.querySelectorAll("input[required], select[required]");
+            
+            for (let input of inputs) {
+                if (!input.value.trim()) {
+                    alert(`Please fill in the required field: ${input.name}`);
+                    input.focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
         function submitForm() {
+            if (!validateForm()) return;
+
             const form = document.getElementById('studentForm');
             const submitButton = document.getElementById('submitButton');
             submitButton.disabled = true;
             submitButton.textContent = "Submitting...";
 
             const formData = new FormData(form);
-
-            const filePromises = [];
             const fileFields = ['PaymentReceipt', 'StudentPhoto'];
+            const filePromises = [];
 
             fileFields.forEach(field => {
                 const fileInput = document.querySelector(`input[name="${field}"]`);
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
                     const reader = new FileReader();
-                
+                    
                     const filePromise = new Promise(resolve => {
                         reader.onloadend = function () {
-                            formData.append(field, reader.result.split(',')[1]);  // Base64 data
-                            formData.append(`${field}MimeType`, file.type); // File type
-                            formData.append(`${field}Name`, file.name); // File name
+                            formData.append(field, reader.result.split(',')[1]);
+                            formData.append(`${field}MimeType`, file.type);
+                            formData.append(`${field}Name`, file.name);
                             resolve();
                         };
                         reader.readAsDataURL(file);
