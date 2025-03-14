@@ -226,18 +226,8 @@
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.result === 'success') {
-                alert('Form submitted successfully!');
-                form.reset();
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => console.error('Error:', error));
     });
-    formData.forEach((value, key) => {
+        formData.forEach((value, key) => {
                 formObject[key] = value;
             });
 
@@ -246,6 +236,8 @@
 
             // Redirect to submitted.html
             window.location.href = "submitted.html";
+
+
 }
 
 
