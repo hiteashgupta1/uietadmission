@@ -196,7 +196,8 @@
         const form = document.getElementById('studentForm');
         const formData = new FormData(form);
 
-
+        const formObject = {};
+            
         const filePromises = [];
         const fileFields = ['PaymentReceipt', 'StudentPhoto'];
 
@@ -236,6 +237,15 @@
         })
         .catch(error => console.error('Error:', error));
     });
+    formData.forEach((value, key) => {
+                formObject[key] = value;
+            });
+
+            // Store in localStorage
+            localStorage.setItem("submittedData", JSON.stringify(formObject));
+
+            // Redirect to submitted.html
+            window.location.href = "submitted.html";
 }
 
 
